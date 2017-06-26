@@ -47,6 +47,20 @@ class Row < Scraped::HTML
   field :area_id do
     noko.xpath('td[1]').text.tidy
   end
+
+  field :party_code do
+    noko.xpath('td[5]').text.tidy
+  end
+
+  field :party_name do
+    parties[party_code]
+  end
+
+  private
+
+  def parties
+    noko.xpath('../tr[td]/td[5]/a').map { |a| [a.text, a[:title]] }.to_h
+  end
 end
 
 wikipedia_url = 'https://fr.wikipedia.org/wiki/Liste_des_pr%C3%A9sidents_des_conseils_d%C3%A9partementaux_fran%C3%A7ais'
